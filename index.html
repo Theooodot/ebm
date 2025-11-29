@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services Calculator</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+        /* UPDATED: Body styles for flexbox layout to push footer down */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #1a1a1a;
+            color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header Banner Styles */
+        .header-banner {
+            background-color: #0a192f; /* A dark blue similar to the image */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            gap: 20px;
+            border-bottom: 3px solid #172a45;
+        }
+
+        .header-banner img {
+            max-width: 80px; /* Adjust size as needed */
+            height: auto;
+        }
+
+        .header-banner h1 {
+            color: #ffffff;
+            font-size: 2.5em;
+            font-weight: 700;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        /* UPDATED: Main content styles to grow and fill space */
+        .main-content {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+            flex: 1; /* This makes the main content area expand */
+        }
+
+        .container {
+            display: flex;
+            gap: 30px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .service-list-column, .summary-column {
+            background-color: #2a2a2a;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            flex: 1;
+        }
+
+        h2 {
+            color: #00aaff;
+            border-bottom: 2px solid #00aaff;
+            padding-bottom: 10px;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        h3 {
+            color: #00aaff;
+            margin-bottom: 10px;
+        }
+
+        /* Styles for the Customer Name input */
+        .customer-info {
+            margin-bottom: 20px;
+        }
+        .customer-info label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #cccccc;
+        }
+        .customer-info input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #555;
+            background-color: #1e1e1e;
+            color: #f0f0f0;
+            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+            box-sizing: border-box; /* Ensures padding doesn't affect width */
+        }
+
+        #serviceList {
+            list-style-type: none;
+            padding: 0;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        #serviceList li {
+            background-color: #333;
+            border: 1px solid #555;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #serviceList li:hover {
+            background-color: #005f99;
+            transform: scale(1.02);
+        }
+
+        .service-price {
+            font-weight: 600;
+            color: #4cff4c;
+        }
+
+        #summaryOutput {
+            background-color: #1e1e1e;
+            border: 1px solid #444;
+            padding: 20px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'Courier New', Courier, monospace;
+            min-height: 200px;
+            color: #f0f0f0;
+        }
+
+        .buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+        }
+
+        button {
+            flex-grow: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        #clearBtn {
+            background-color: #ff4444;
+            color: white;
+        }
+
+        #clearBtn:hover {
+            background-color: #cc0000;
+        }
+
+        #copyBtn {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        #copyBtn:hover {
+            background-color: #45a049;
+        }
+
+        .related-case {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #333;
+            border-radius: 8px;
+            border-left: 5px solid #00aaff;
+        }
+
+        .related-case p {
+            margin: 0;
+            font-size: 1.1em;
+        }
+
+        #orderNumberDisplay {
+            font-weight: bold;
+            color: #4cff4c;
+        }
+
+        /* NEW: Styles for the Footer */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #0f0f0f;
+            color: #888888;
+            font-size: 0.9em;
+            border-top: 1px solid #333;
+            margin-top: auto; /* Pushes footer to the bottom */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== HEADER BANNER ==================== -->
+    <!-- EDIT THE TWO LINES BELOW TO CUSTOMIZE YOUR BANNER -->
+    <header class="header-banner">
+        <!-- STEP 1: Replace the image link below with your Imgur link -->
+        <img src="https://i.imgur.com/Qs1lf3b.png" alt="Department Badge">
+        
+        <!-- STEP 2: Change the department name below -->
+        <h1>Empire Bay Mechanic</h1>
+    </header>
+    <!-- ========================================================= -->
+
+    <main class="main-content">
+        <div class="container">
+            <div class="service-list-column">
+                <h2>Services Calculator</h2>
+                <ul id="serviceList">
+                    <!-- Services will be populated by JavaScript -->
+                </ul>
+            </div>
+
+            <div class="summary-column">
+                <!-- Customer Name Input Field -->
+                <div class="customer-info">
+                    <label for="customerNameInput">Customer Name:</label>
+                    <input type="text" id="customerNameInput" placeholder="Enter customer name">
+                </div>
+
+                <h2>Bill Summary</h2>
+                <pre id="summaryOutput">
+**Order Number:** N/A
+**Customer Name:** N/A
+**Services:**
+-
+**Grand Total:** $0
+                </pre>
+                <div class="buttons">
+                    <button id="clearBtn">Clear</button>
+                    <button id="copyBtn">Copy to Clipboard</button>
+                </div>
+                
+                <div class="related-case">
+                    <h3>Order Number</h3>
+                    <p>Order Number: <span id="orderNumberDisplay">N/A</span></p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- NEW: Footer Section -->
+    <footer>
+        <p>© 2025 Trivox Studio. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DATA ---
+            const services = [
+                { name: 'V12 Package', price: 1500000 },
+                { name: 'PMS', price: 200000 },
+                { name: 'Drift Tune', price: 35000 },
+                { name: 'Nitrous Installation', price: 1500000 },
+                { name: 'Nitro Refill', price: 150000 },
+                { name: 'Cosmetics (per parts)', price: 10000 },
+                { name: 'Extras (per parts)', price: 5000 },
+                { name: 'Respray', price: 5000 },
+                { name: 'Tire Smoke', price: 5000 },
+                { name: 'Neon Lights', price: 5000 },
+                { name: 'Headlights', price: 5000 },
+                { name: 'Wheels', price: 5000 },
+                { name: 'Performance', price: 10000 },
+                { name: 'Stancer', price: 5000 },
+                { name: 'Repair', price: 5000 },
+                { name: 'Towing', price: 50000 },
+                { name: 'AWD', price: 50000 },
+                { name: 'RWD', price: 50000 },
+                { name: 'FWD', price: 50000 },
+                { name: 'Turbocharge', price: 50000 },
+                { name: 'Slick Tires', price: 50000 },
+                { name: 'Semi Offroad Tires', price: 50000 },
+                { name: 'Offroad Tires', price: 50000 },
+                { name: 'Ceramic  Brake', price: 50000 },
+                { name: 'Cleaning Kits', price: 1000 },
+                { name: 'Cleaning Service', price: 5000 },
+                { name: 'Removal of V12', price: 30000 },
+                { name: 'Removal Of AWD', price: 50000 },
+                { name: 'Removal Of FWD', price: 50000 },
+                { name: 'Removal Of RWD', price: 50000 },
+                { name: 'Removal Of Slick Tires', price: 50000 },
+                { name: 'Removal Of Semi Offroad Tires', price: 50000 },
+                { name: 'Removal Of Offroad Tires', price: 50000 },
+                { name: 'Removal Of Ceramic', price: 30000 },
+                { name: 'Removal Of Turbocharge', price: 30000 }
+            ];
+
+            // --- STATE ---
+            let selectedServices = [];
+            let orderNumber = 'N/A';
+
+            // --- DOM ELEMENTS ---
+            const serviceListEl = document.getElementById('serviceList');
+            const summaryOutputEl = document.getElementById('summaryOutput');
+            const clearBtnEl = document.getElementById('clearBtn');
+            const copyBtnEl = document.getElementById('copyBtn');
+            const orderNumberDisplayEl = document.getElementById('orderNumberDisplay');
+            const customerNameInputEl = document.getElementById('customerNameInput');
+
+            // --- FUNCTIONS ---
+
+            // FIXED: Changed from Philippine peso to dollar sign
+            const formatCurrency = (amount) => {
+                return '$' + amount.toLocaleString('en-US');
+            };
+
+            const generateOrderNumber = () => {
+                return 'ORD-' + Math.random().toString(36).substring(2, 9).toUpperCase();
+            };
+
+            const renderServiceList = () => {
+                serviceListEl.innerHTML = '';
+                services.forEach(service => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <span>${service.name}</span>
+                        <span class="service-price">${formatCurrency(service.price)}</span>
+                    `;
+                    li.addEventListener('click', () => addService(service));
+                    serviceListEl.appendChild(li);
+                });
+            };
+
+            const addService = (service) => {
+                selectedServices.push(service);
+                if (orderNumber === 'N/A') {
+                    orderNumber = generateOrderNumber();
+                }
+                updateSummary();
+            };
+
+            /**
+             * Updates the bill summary display.
+             */
+            const updateSummary = () => {
+                // Get the customer name from the input field
+                const customerName = customerNameInputEl.value.trim();
+
+                if (selectedServices.length === 0) {
+                    summaryOutputEl.textContent = `**Order Number:** N/A\n**Customer Name:** ${customerName || 'N/A'}\n**Services:**\n-\n**Grand Total:** ${formatCurrency(0)}`;
+                    orderNumberDisplayEl.textContent = 'N/A';
+                    orderNumber = 'N/A'; // Reset order number
+                    return;
+                }
+
+                const serviceCounts = {};
+                selectedServices.forEach(service => {
+                    serviceCounts[service.name] = {
+                        ...service,
+                        count: (serviceCounts[service.name]?.count || 0) + 1
+                    };
+                });
+
+                let grandTotal = 0;
+                let servicesText = '';
+
+                for (const serviceName in serviceCounts) {
+                    const service = serviceCounts[serviceName];
+                    const lineTotal = service.price * service.count;
+                    grandTotal += lineTotal;
+                    servicesText += `- ${serviceName} (x${service.count}): ${formatCurrency(lineTotal)}\n`;
+                }
+
+                // Added Customer Name to the summary text
+                const summaryText = `**Order Number:** ${orderNumber}\n**Customer Name:** ${customerName || 'N/A'}\n**Services:**\n${servicesText}\n**Grand Total:** ${formatCurrency(grandTotal)}`;
+                
+                summaryOutputEl.textContent = summaryText;
+                orderNumberDisplayEl.textContent = orderNumber;
+            };
+
+            /**
+             * Clears all selected services and resets the summary.
+             */
+            const clearSummary = () => {
+                selectedServices = [];
+                // Clear the customer name input field
+                customerNameInputEl.value = '';
+                updateSummary();
+            };
+
+            const copyToClipboard = async () => {
+                try {
+                    await navigator.clipboard.writeText(summaryOutputEl.textContent);
+                    const originalText = copyBtnEl.textContent;
+                    copyBtnEl.textContent = 'Copied!';
+                    copyBtnEl.style.backgroundColor = '#2196F3';
+                    setTimeout(() => {
+                        copyBtnEl.textContent = originalText;
+                        copyBtnEl.style.backgroundColor = '';
+                    }, 2000);
+                } catch (err) {
+                    console.error('Failed to copy text: ', err);
+                    alert('Failed to copy summary. Please copy it manually.');
+                }
+            };
+
+            // --- EVENT LISTENERS ---
+            clearBtnEl.addEventListener('click', clearSummary);
+            copyBtnEl.addEventListener('click', copyToClipboard);
+            // Update summary in real-time as the user types the customer's name
+            customerNameInputEl.addEventListener('input', updateSummary);
+
+            // --- INITIALIZATION ---
+            renderServiceList();
+        });
+    </script>
+</body>
+</html>
